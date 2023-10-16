@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Follow : MonoBehaviour
 {
-
-    public float FollowSpeed = 10f;
     public float FollowDistance = -10f;
     public Transform Target;
 
