@@ -1,19 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Collection : MonoBehaviour
 {
-
-    private int CoinCounter;
+    public TextMeshProUGUI CoinCounter;
+    private int CoinsCollected;
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
 
             Destroy(gameObject);
-            CoinCounter++;
-            Debug.Log(CoinCounter);
+            CoinsCollected++;
+            CoinCounter.text = new string("Coins: " + CoinsCollected);
+            
 
         }
     }

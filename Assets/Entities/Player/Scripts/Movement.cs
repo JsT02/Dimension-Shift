@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class Movement : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class Movement : MonoBehaviour
     private Vector2 MovementVector;
     private Rigidbody2D rb = null;
     public float Gravity = 10f;
+    public GameObject settings;
 
     private void Awake()
     {
@@ -31,6 +33,9 @@ public class Movement : MonoBehaviour
     private void Update()
     {
         rb.velocity = MovementVector * MovementSpeed;
+
+        Settings();
+
     }
 
     private void OnDisable()
@@ -52,6 +57,13 @@ public class Movement : MonoBehaviour
     {
 
         MovementVector = Vector2.zero;
+
+    }
+
+    void Settings()
+    {
+
+        if (input.Player.Settings.IsPressed()) settings.SetActive(true);
 
     }
 
