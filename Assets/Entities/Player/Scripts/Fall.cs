@@ -6,15 +6,12 @@ using UnityEngine.UI;
 
 public class Fall : MonoBehaviour
 {
-
+    public playerLives lives;
     public GameObject Player;
-    public TextMeshProUGUI lifecounter;
-    private int LivesLeft;
     private Vector2 SpawnPoint;
 
     private void Start()
     {
-        LivesLeft = 3;
         SpawnPoint = Player.transform.position;
     }
     private void Update()
@@ -24,17 +21,7 @@ public class Fall : MonoBehaviour
         {
 
             Player.transform.position = SpawnPoint;
-
-            LivesLeft--;
-
-        }
-
-        lifecounter.text = new string("Lives: " + LivesLeft);
-
-        if(LivesLeft == -1)
-        {
-
-            Debug.Log("Player has died");
+            lives.takeDamage = true;
 
         }
 

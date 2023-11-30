@@ -1,22 +1,37 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 public class Movement : MonoBehaviour
 {
+    // Components //
 
     private CustomInput input = null;
-    public float MovementSpeed = 100f;
-    private Vector2 MovementVector;
     private Rigidbody2D rb = null;
-    public float Gravity = 10f;
     public GameObject settings;
+    public GameObject game;
+    private bool firstTime = true;
+
+    // Values //
+
+    // Movement
+    private Vector2 MovementVector;
+    public float MovementSpeed = 100f;
+    public float Gravity = 9.81f;
+    public float JumpFactor = 3.0f;
+
+    // Boolean
+    public bool isGrounded;
+    private bool isJumping = false;
+    private bool first = true;
 
     private void Awake()
     {
+
         input = new CustomInput();
         rb = GetComponent<Rigidbody2D>();
 
@@ -24,17 +39,33 @@ public class Movement : MonoBehaviour
 
     private void OnEnable()
     {
+
         input.Enable();
         input.Player.Movement.performed += OnMovementPerformed;
         input.Player.Movement.canceled += OnMovementCanceled;
+        input.Player.Jump.performed += OnJumpPerformed;
+        input.Player.Jump.canceled += OnJumpCanceled;
+        input.Player.Settings.performed += OnSettingsPerformed;
 
     }
 
     private void Update()
     {
-        rb.velocity = MovementVector * MovementSpeed;
+        
+        rb.velocityX = MovementVector.x * MovementSpeed;
 
-        Settings();
+        if (rb.velocityY == 0)
+        {
+
+            if (first) first = false;
+            else isGrounded = true;
+
+        }
+        else isGrounded = false;
+
+        if (isGrounded && isJumping) rb.AddForceY(JumpFactor);
+
+        // Settings();
 
     }
 
@@ -43,6 +74,9 @@ public class Movement : MonoBehaviour
         input.Disable();
         input.Player.Movement.performed -= OnMovementPerformed;
         input.Player.Movement.canceled -= OnMovementCanceled;
+        input.Player.Jump.performed -= OnJumpPerformed;
+        input.Player.Jump.canceled -= OnJumpCanceled;
+        input.Player.Settings.performed -= OnSettingsPerformed;
 
     }
 
@@ -60,11 +94,37 @@ public class Movement : MonoBehaviour
 
     }
 
-    void Settings()
+    void OnJumpPerformed(InputAction.CallbackContext context)
     {
 
-        if (input.Player.Settings.IsPressed()) settings.SetActive(true);
+        isJumping = true;
 
+    }
+
+    void OnJumpCanceled(InputAction.CallbackContext context)
+    {
+
+        isJumping = false;
+
+    }
+
+    void OnSettingsPerformed(InputAction.CallbackContext context)
+    {
+
+        if (settings.active == false)
+        {
+
+            settings.SetActive(true);
+            game.SetActive(false);
+
+        }
+        else
+        {
+
+            settings.SetActive(false);
+            game.SetActive(true);
+
+        }
     }
 
 }
