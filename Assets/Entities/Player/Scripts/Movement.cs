@@ -15,6 +15,7 @@ public class Movement : MonoBehaviour
     public GameObject settings;
     public GameObject game;
     private bool firstTime = true;
+    private AudioSource jump = null;
 
     // Values //
 
@@ -34,6 +35,7 @@ public class Movement : MonoBehaviour
 
         input = new CustomInput();
         rb = GetComponent<Rigidbody2D>();
+        jump = GetComponent<AudioSource>();
 
     }
 
@@ -63,8 +65,13 @@ public class Movement : MonoBehaviour
         }
         else isGrounded = false;
 
-        if (isGrounded && isJumping) rb.AddForceY(JumpFactor);
+        if (isGrounded && isJumping)
+        {
 
+            rb.AddForceY(JumpFactor);
+            jump.Play();
+
+        }
         // Settings();
 
     }
